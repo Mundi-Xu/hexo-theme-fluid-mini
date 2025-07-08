@@ -54,18 +54,15 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   <meta name="googlebot" content="index,follow">
   
   <!-- DNS预解析 -->
-  <link rel="dns-prefetch" href="//fonts.googleapis.com">
-  <link rel="dns-prefetch" href="//lib.baomitu.com">
+  <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="//raw.githubusercontent.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   
   <!-- 关键资源预加载 -->
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_css) %>/main.css" as="style">
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/boot.js" as="script">
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/utils.js" as="script">
   
-  <!-- 字体预加载 -->
-  <% if (theme.iconfont) { %>
-    <link rel="preload" href="<%= theme.iconfont %>" as="style" crossorigin>
-  <% } %>
   
   <!-- 首页关键图片预加载 -->
   <% if (is_home() && theme.index.banner_img) { %>

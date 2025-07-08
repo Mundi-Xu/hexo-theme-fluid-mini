@@ -169,24 +169,5 @@ Fluid.events = {
   },
 
   billboard: function() {
-    if (!('console' in window)) {
-      return;
-    }
-    // eslint-disable-next-line no-console
-    console.log(`
--------------------------------------------------
-|                                               |
-|      ________  __            _        __      |
-|     |_   __  |[  |          (_)      |  ]     |
-|       | |_ \\_| | | __   _   __   .--.| |      |
-|       |  _|    | |[  | | | [  |/ /'\`\\' |      |
-|      _| |_     | | | \\_/ |, | || \\__/  |      |
-|     |_____|   [___]'.__.'_/[___]'.__.;__]     |
-|                                               |
-|            Powered by Hexo x Fluid            |
-| https://github.com/fluid-dev/hexo-theme-fluid |
-|                                               |
--------------------------------------------------
-    `);
   }
 };

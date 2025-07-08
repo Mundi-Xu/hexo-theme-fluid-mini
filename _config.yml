@@ -1,18 +1,4 @@
 #---------------------------
-# Hexo Theme Fluid
-# Author: Fluid-dev
-# Github: https://github.com/fluid-dev/hexo-theme-fluid
-#
-# 配置指南: https://hexo.fluid-dev.com/docs/guide/
-# 你可以从指南中获得更详细的说明
-#
-# Guide: https://hexo.fluid-dev.com/docs/en/guide/
-# You can get more detailed help from the guide
-#---------------------------
-
-
-#---------------------------
-# 全局
 # Global
 #---------------------------
 
@@ -62,9 +48,13 @@ code:
     highlightjs:
       # 在链接中挑选 style 填入
       # Select a style in the link
-      # See: https://highlightjs.org/demo/
+      # See: https://highlightjs.org/static/demo/
       style: "github gist"
       style_dark: "dark"
+
+      # # 是否根据 style 改变代码背景色（如果 style 是深色背景别忘了开启此项）
+      # # If true, the code background will change color based on the style (If style has a dark background, don't forget to true)
+      # bg_color: true
 
     prismjs:
       # 在下方链接页面右侧的圆形按钮挑选 style 填入，也可以直接填入 css 链接
@@ -87,7 +77,7 @@ fun_features:
 
     # 打印速度，数字越大越慢
     # Typing speed, the larger the number, the slower
-    typeSpeed: 70
+    typeSpeed: 80
 
     # 游标字符
     # Cursor character
@@ -234,10 +224,20 @@ font:
 # 指定自定义 .js 文件路径，支持列表；路径是相对 source 目录，如 /js/custom.js 对应存放目录 source/js/custom.js
 # Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`
 custom_js:
+  - /js/DynamicLine.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
+
+# 自定义 <head> 节点中的 HTML 内容
+# Customize <head> HTML content
+custom_head:
+
+# 自定义底部 HTML 内容（位于 footer 上方），注意不要和 `post: custom` 配置冲突
+# Customize the HTML content at the bottom (located above the footer), be careful not to conflict with `post: custom`
+custom_html: ''
+
 
 # 网页访问统计
 # Analysis of website visitors
@@ -247,7 +247,7 @@ web_analytics:
   # 遵循访客浏览器"请勿追踪"的设置，如果开启则不统计其访问
   # Follow the "Do Not Track" setting of the visitor's browser
   # See: https://www.w3.org/TR/tracking-dnt/
-  follow_dnt: true
+  follow_dnt: false
 
   # Google Analytics 4 的媒体资源 ID
   # Google Analytics 4 MEASUREMENT_ID
@@ -259,7 +259,7 @@ web_analytics:
 # Canonical, to specify a canonical URL for Google Search, need to set up `url: http://yourdomain.com` in hexo _config.yml
 # See: https://support.google.com/webmasters/answer/139066
 canonical:
-  enable: false
+  enable: true
 
 # 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
 # Lazy loading of images and comment plugin on the page
@@ -272,7 +272,7 @@ lazyload:
 
   # 开启后懒加载仅在文章页生效，如果自定义页面需要使用，可以在 Front-matter 里指定 `lazyload: true`
   # If true, only enable lazyload on the post page. For custom pages, you can set 'lazyload: true' in front-matter
-  onlypost: false
+  onlypost: true
 
   # 触发加载的偏移倍数，基数是视窗高度，可根据部署环境的请求速度调节
   # The factor of viewport height that triggers loading
@@ -314,10 +314,12 @@ navbar:
   menu:
     - { key: "home", link: "/", icon: "iconfont icon-home-fill" }
     - { key: "archive", link: "/archives/", icon: "iconfont icon-archive-fill" }
-    - { key: "category", link: "/categories/", icon: "iconfont icon-category-fill" }
+    # - { key: "category", link: "/categories/", icon: "iconfont icon-category-fill" }
     - { key: "tag", link: "/tags/", icon: "iconfont icon-tags-fill" }
+    - { key: "RSS", link: "/atom.xml", icon: "iconfont icon-rss" }
     - { key: "about", link: "/about/", icon: "iconfont icon-user-fill" }
-    #- { key: "links", link: "/links/", icon: "iconfont icon-link-fill" }
+    - { key: "links", link: "/links/", icon: "iconfont icon-link-fill" }
+
 
 # 搜索功能，基于 hexo-generator-search 插件，若已安装其他搜索插件请关闭此功能，以避免生成多余的索引文件
 # Search feature, based on hexo-generator-search. If you have installed other search plugins, please disable this feature to avoid generating redundant index files
@@ -326,11 +328,11 @@ search:
 
   # 搜索索引文件的路径，可以是相对路径或外站的绝对路径
   # Path for search index file, it can be a relative path or an absolute path
-  path: /local-search.xml
+  path: /local-search.json
 
   # 文件生成在本地的位置，必须是相对路径
   # The location where the index file is generated locally, it must be a relative location
-  generate_path: /local-search.xml
+  generate_path: /local-search.json
 
   # 搜索的范围
   # Search field
@@ -396,16 +398,13 @@ footer:
     <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
   '
 
-  # 展示网站的 PV、UV 统计数
-  # Display website PV and UV statistics
-  statistics:
-    enable: true
+statistics:
+  enable: true
 
-    # 统计数据来源，使用 leancloud, umami 需要设置 `web_analytics` 中对应的参数；使用 busuanzi 不需要额外设置，但是有时不稳定，另外本地运行时 busuanzi 显示统计数据很大属于正常现象，部署后会正常
-    # Data source. If use leancloud, umami, you need to set the parameter in `web_analytics`
-    # Options: busuanzi | leancloud | umami
-    source: "busuanzi"
-
+  # 统计数据来源，使用 leancloud, umami 需要设置 `web_analytics` 中对应的参数；使用 busuanzi 不需要额外设置，但是有时不稳定，另外本地运行时 busuanzi 显示统计数据很大属于正常现象，部署后会正常
+  # Data source. If use leancloud, umami, you need to set the parameter in `web_analytics`
+  # Options: busuanzi | leancloud | umami
+  source: "busuanzi"
 
 
 
@@ -740,7 +739,7 @@ archive:
 # Category Page
 #---------------------------
 category:
-  enable: true
+  enable: false
   banner_img: /img/default.png
   banner_img_height: 60
   banner_mask_alpha: 0.3

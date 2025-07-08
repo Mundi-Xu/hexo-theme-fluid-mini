@@ -30,18 +30,122 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   <meta name="theme-color" content="<%= theme.color.navbar_bg_color %>">
   <meta name="author" content="<%= page.author || config.author %>">
   <meta name="keywords" content="<%= keywords %>">
+  
+  <!-- SEO优化 -->
+  <% if (is_post()) { %>
+    <meta property="article:published_time" content="<%= page.date.toISOString() %>">
+    <% if (page.updated) { %>
+      <meta property="article:modified_time" content="<%= page.updated.toISOString() %>">
+    <% } %>
+    <% if (page.categories && page.categories.length) { %>
+      <% page.categories.forEach(function(cat){ %>
+        <meta property="article:section" content="<%= cat.name %>">
+      <% }) %>
+    <% } %>
+    <% if (page.tags && page.tags.length) { %>
+      <% page.tags.forEach(function(tag){ %>
+        <meta property="article:tag" content="<%= tag.name %>">
+      <% }) %>
+    <% } %>
+  <% } %>
+  
+  <!-- 机器人指令 -->
+  <meta name="robots" content="index,follow">
+  <meta name="googlebot" content="index,follow">
+  
+  <!-- DNS预解析 -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="dns-prefetch" href="//lib.baomitu.com">
+  
+  <!-- 关键资源预加载 -->
+  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_css) %>/main.css" as="style">
+  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/boot.js" as="script">
+  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/utils.js" as="script">
+  
+  <!-- 字体预加载 -->
+  <% if (theme.iconfont) { %>
+    <link rel="preload" href="<%= theme.iconfont %>" as="style" crossorigin>
+  <% } %>
+  
+  <!-- 首页关键图片预加载 -->
+  <% if (is_home() && theme.index.banner_img) { %>
+    <link rel="preload" href="<%= url_for(theme.index.banner_img) %>" as="image">
+  <% } %>
+  
+  <!-- 预连接到关键第三方域名 -->
+  <link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
+  <% if (theme.web_analytics && theme.web_analytics.enable && theme.web_analytics.google) { %>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <% } %>
+  
   <% if (theme.open_graph.enable) { %>
     <%- open_graph(ogConfig) %>
   <% } else { %>
-    <meta name="description" content="<%= description %>">
+    <% if (description) { %>
+      <meta name="description" content="<%= description %>">
+    <% } %>
   <% } %>
-  <% if ((theme.post.meta.views.enable && theme.post.meta.views.source === 'busuanzi')
-    || (theme.footer.statistics.enable && theme.footer.statistics.source === 'busuanzi')) { %>
+  <% if ((theme.post && theme.post.meta && theme.post.meta.views && theme.post.meta.views.enable && theme.post.meta.views.source === 'busuanzi')
+    || (theme.footer && theme.footer.statistics && theme.footer.statistics.enable && theme.footer.statistics.source === 'busuanzi')) { %>
     <meta name="referrer" content="no-referrer-when-downgrade">
   <% } %>
   <% if (theme.custom_head) { %>
     <%- theme.custom_head %>
   <% } %>
+  
+  <!-- JSON-LD 结构化数据 -->
+  <script type="application/ld+json">
+  <% if (is_post()) { %>
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "<%= page.title %>",
+    "author": {
+      "@type": "Person",
+      "name": "<%= page.author || config.author %>"
+    },
+    "datePublished": "<%= page.date.toISOString() %>",
+    <% if (page.updated) { %>
+    "dateModified": "<%= page.updated.toISOString() %>",
+    <% } %>
+    "description": "<%= description || '' %>",
+    <% if (ogImage) { %>
+    "image": "<%= url_for(ogImage) %>",
+    <% } %>
+    "publisher": {
+      "@type": "Organization",
+      "name": "<%= config.title %>",
+      <% if (theme.favicon) { %>
+      "logo": {
+        "@type": "ImageObject",
+        "url": "<%= url_for(theme.favicon) %>"
+      }
+      <% } %>
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "<%= url %>"
+    }
+  }
+  <% } else if (is_home()) { %>
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "<%= config.title %>",
+    "description": "<%= config.description %>",
+    "url": "<%= config.url %>"
+  }
+  <% } else { %>
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "<%= page.title || config.title %>",
+    "description": "<%= description || config.description %>",
+    "url": "<%= url %>"
+  }
+  <% } %>
+  </script>
+  
   <title><%= title %></title>
 
   <%- partial('_partials/css.ejs') %>
@@ -49,6 +153,15 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   <%- js_ex(theme.static_prefix.internal_js, 'utils.js') %>
   <%- js_ex(theme.static_prefix.internal_js, 'color-schema.js') %>
   <%- partial('_partials/plugins/analytics.ejs') %>
+
+  <!-- Prefetch 预取常用页面 -->
+  <% if (is_home()) { %>
+    <link rel="prefetch" href="<%= url_for('/archives/') %>">
+    <link rel="prefetch" href="<%= url_for('/tags/') %>">
+    <link rel="prefetch" href="<%= url_for('/about/') %>">
+  <% } %>
+  
+
 
   <%- inject_point('head') %>
 </head>

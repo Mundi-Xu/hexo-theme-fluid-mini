@@ -53,26 +53,42 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   <meta name="robots" content="index,follow">
   <meta name="googlebot" content="index,follow">
   
-  <!-- DNS预解析 -->
+  <!-- DNS预解析和预连接优化 -->
+  <link rel="dns-prefetch" href="//at.alicdn.com">
+  <link rel="dns-prefetch" href="//cdn.bootcdn.net">
   <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="//raw.githubusercontent.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="//busuanzi.ibruce.info">
+  
+  <link rel="preconnect" href="https://at.alicdn.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
+  
+  <% if (theme.web_analytics && theme.web_analytics.enable && theme.web_analytics.google && theme.web_analytics.google.measurement_id) { %>
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <% } %>
+  
+  <!-- 字体预加载：支持霞鹜文楷等自定义字体 -->
+  <% if (theme.custom_css && theme.custom_css.some(css => css.includes('lxgw-wenkai'))) { %>
+    <link rel="preload" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/LXGWWenKaiScreen-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <% } %>
+  
+  <!-- 图标库异步预加载 -->
+  <% if (theme.iconfont) { %>
+    <link rel="preload" href="<%= theme.iconfont %>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="<%= theme.iconfont %>"></noscript>
+  <% } %>
   
   <!-- 关键资源预加载 -->
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_css) %>/main.css" as="style">
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/boot.js" as="script">
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/utils.js" as="script">
   
-  
   <!-- 首页关键图片预加载 -->
   <% if (is_home() && theme.index.banner_img) { %>
     <link rel="preload" href="<%= url_for(theme.index.banner_img) %>" as="image">
-  <% } %>
-  
-  <!-- 预连接到关键第三方域名 -->
-  <link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
-  <% if (theme.web_analytics && theme.web_analytics.enable && theme.web_analytics.google) { %>
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
   <% } %>
   
   <% if (theme.open_graph.enable) { %>
@@ -82,10 +98,13 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
       <meta name="description" content="<%= description %>">
     <% } %>
   <% } %>
+  
   <% if ((theme.post && theme.post.meta && theme.post.meta.views && theme.post.meta.views.enable && theme.post.meta.views.source === 'busuanzi')
     || (theme.footer && theme.footer.statistics && theme.footer.statistics.enable && theme.footer.statistics.source === 'busuanzi')) { %>
     <meta name="referrer" content="no-referrer-when-downgrade">
   <% } %>
+  
+  <!-- 用户自定义头部内容 -->
   <% if (theme.custom_head) { %>
     <%- theme.custom_head %>
   <% } %>
@@ -157,8 +176,6 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     <link rel="prefetch" href="<%= url_for('/tags/') %>">
     <link rel="prefetch" href="<%= url_for('/about/') %>">
   <% } %>
-  
-
 
   <%- inject_point('head') %>
 </head>

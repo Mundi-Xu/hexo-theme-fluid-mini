@@ -26,37 +26,7 @@
   <%- js(theme.custom_js) %>
 <% } %>
 
-<% if ((theme.footer.statistics.enable && theme.footer.statistics.source === 'busuanzi')
-  || (page.meta !== false && theme.post.meta.views.enable && theme.post.meta.views.source === 'busuanzi')) { %>
 
-<script>
-
-function observeAndDisplay(sourceId, targetId) {
-  if (document.getElementById(sourceId)) {
-    new MutationObserver(m => {
-      m.forEach(m => {
-        if (m.target.textContent.trim() !== '') {
-          document.getElementById(targetId).style.display = 'inline';
-        }
-      });
-    })
-      .observe(
-        document.getElementById(sourceId),
-        { childList: true, characterData: true, subtree: true }
-      ); 
-  }
-    
-} 
-
-observeAndDisplay('busuanzi_value_page_pv', 'busuanzi_container_page_pv');
-observeAndDisplay('busuanzi_value_site_pv', 'busuanzi_container_site_pv');
-observeAndDisplay('busuanzi_value_site_uv', 'busuanzi_container_site_uv');
-    
-
-</script> 
-
-  <%- js_ex(theme.static_prefix.busuanzi, 'busuanzi.pure.mini.js', 'defer') %>
-<% } %>
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
 <%- js_ex(theme.static_prefix.internal_js, 'boot.js') %>

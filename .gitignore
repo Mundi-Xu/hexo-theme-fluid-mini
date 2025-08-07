@@ -8,3 +8,7 @@ Thumbs.db
 node_modules/
 package-lock.json
 *.lock
+
+# Personal configuration file
+_config_personal.yml
+CLAUDE.md

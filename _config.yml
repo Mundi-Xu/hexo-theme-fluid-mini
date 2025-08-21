@@ -236,7 +236,6 @@ custom_css:
 # 自定义 <head> 节点中的 HTML 内容
 # Customize <head> HTML content
 custom_head: '
-<meta name="format-detection" content="telephone=no" />
 <meta name="renderer" content="webkit" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 '
@@ -261,6 +260,28 @@ web_analytics:
   # See: https://support.google.com/analytics/answer/9744165#zippy=%2Cin-this-article
   google:
     measurement_id:
+
+# SEO优化配置
+# SEO optimization configuration
+seo:
+  # Google站点验证代码
+  # Google site verification code
+  google_site_verification:
+  
+  # 移动端优化设置
+  # Mobile optimization settings
+  format_detection: true
+  mobile_web_app_capable: true
+  apple_mobile_web_app_title: "Fluid"
+  
+  # JSON-LD结构化数据配置
+  # JSON-LD structured data configuration
+  json_ld:
+    post:
+      keywords: true
+      article_body: true
+    website:
+      potential_action: true
 
 # Canonical 用于向 Google 搜索指定规范网址，开启前确保 hexo _config.yml 中配置 `url: http://yourdomain.com`
 # Canonical, to specify a canonical URL for Google Search, need to set up `url: http://yourdomain.com` in hexo _config.yml

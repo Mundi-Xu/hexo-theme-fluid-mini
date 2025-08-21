@@ -10,5 +10,6 @@ package-lock.json
 *.lock
 
 # Personal configuration file
-_config_personal.yml
+_config.hexo-theme-fluid-mini.yml
 CLAUDE.md
+QWEN.md

@@ -49,6 +49,11 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     <% } %>
   <% } %>
   
+  <!-- 站点验证 -->
+  <% if (theme.seo && theme.seo.google_site_verification) { %>
+    <meta name="google-site-verification" content="<%= theme.seo.google_site_verification %>" />
+  <% } %>
+  
   <!-- 机器人指令 -->
   <meta name="robots" content="index,follow">
   <meta name="googlebot" content="index,follow">
@@ -71,7 +76,8 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   <% } %>
   
   <!-- 字体预加载：支持霞鹜文楷等自定义字体 -->
-  <% if (theme.custom_css && theme.custom_css.some(css => css.includes('lxgw-wenkai'))) { %>
+  <% if ((theme.font && theme.font.font_family && theme.font.font_family.includes('LXGW')) || 
+        (theme.custom_css && theme.custom_css.some(css => css.includes('lxgw-wenkai')))) { %>
     <link rel="preload" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/LXGWWenKaiScreen-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <% } %>
   
@@ -83,12 +89,19 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   
   <!-- 关键资源预加载 -->
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_css) %>/main.css" as="style">
-  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/boot.js" as="script">
   <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/utils.js" as="script">
+  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/events.js" as="script">
+  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/plugins.js" as="script">
+  <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/boot.js" as="script">
   
   <!-- 首页关键图片预加载 -->
   <% if (is_home() && theme.index.banner_img) { %>
     <link rel="preload" href="<%= url_for(theme.index.banner_img) %>" as="image">
+  <% } %>
+  
+  <!-- 文章页关键资源预加载 -->
+  <% if (is_post()) { %>
+    <link rel="preload" href="<%= url_for(theme.static_prefix.internal_js) %>/img-lazyload.js" as="script">
   <% } %>
   
   <% if (theme.open_graph.enable) { %>
@@ -97,6 +110,17 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     <% if (description) { %>
       <meta name="description" content="<%= description %>">
     <% } %>
+  <% } %>
+  
+  <!-- 移动端优化 -->
+  <% if (theme.seo && theme.seo.format_detection !== false) { %>
+  <meta name="format-detection" content="telephone=no">
+  <% } %>
+  <% if (theme.seo && theme.seo.mobile_web_app_capable) { %>
+  <meta name="mobile-web-app-capable" content="yes">
+  <% } %>
+  <% if (theme.seo && theme.seo.apple_mobile_web_app_title) { %>
+  <meta name="apple-mobile-web-app-title" content="<%= theme.seo.apple_mobile_web_app_title %>">
   <% } %>
   
   <% if ((theme.post && theme.post.meta && theme.post.meta.views && theme.post.meta.views.enable && theme.post.meta.views.source === 'busuanzi')
@@ -141,7 +165,13 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": "<%= url %>"
-    }
+    },
+    <% if (theme.seo && theme.seo.json_ld && theme.seo.json_ld.post && theme.seo.json_ld.post.keywords !== false && page.tags && page.tags.length) { %>
+    "keywords": "<%= page.tags.map(tag => tag.name).join(',') %>",
+    <% } %>
+    <% if (theme.seo && theme.seo.json_ld && theme.seo.json_ld.post && theme.seo.json_ld.post.article_body !== false) { %>
+    "articleBody": "<%= strip_html(page.content).substring(0, 500).trim().replace(/\n/g, ' ').replace(/"/g, '&quot;') %>"
+    <% } %>
   }
   <% } else if (is_home()) { %>
   {
@@ -149,7 +179,17 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     "@type": "WebSite",
     "name": "<%= config.title %>",
     "description": "<%= config.description %>",
-    "url": "<%= config.url %>"
+    "url": "<%= config.url %>",
+    <% if (theme.favicon) { %>
+    "image": "<%= url_for(theme.favicon) %>",
+    <% } %>
+    <% if (theme.seo && theme.seo.json_ld && theme.seo.json_ld.website && theme.seo.json_ld.website.potential_action !== false) { %>
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "<%= url_for('/search/') %>?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+    <% } %>
   }
   <% } else { %>
   {
@@ -157,7 +197,20 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     "@type": "WebPage",
     "name": "<%= page.title || config.title %>",
     "description": "<%= description || config.description %>",
-    "url": "<%= url %>"
+    "url": "<%= url %>",
+    <% if (ogImage) { %>
+    "image": "<%= url_for(ogImage) %>",
+    <% } %>
+    "publisher": {
+      "@type": "Organization",
+      "name": "<%= config.title %>",
+      <% if (theme.favicon) { %>
+      "logo": {
+        "@type": "ImageObject",
+        "url": "<%= url_for(theme.favicon) %>"
+      }
+      <% } %>
+    }
   }
   <% } %>
   </script>

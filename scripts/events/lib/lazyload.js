@@ -33,10 +33,12 @@ module.exports = (hexo) => {
 
 const lazyImages = (htmlContent, loadingImage) => {
   return htmlContent.replace(/<img[^>]+?src=(".*?")[^>]*?>/gims, (str, p1) => {
+    // 如果已经处理过，跳过
     if (/lazyload/i.test(str)) {
       return str;
     }
-    return str.replace(p1, `${p1} srcset="${loadingImage}" lazyload`);
+    // 将src属性移动到data-src，使用loading图片作为占位符，并添加lazyload属性
+    return str.replace(/src=/i, `src="${loadingImage}" data-src=`).replace(/<img/i, '<img lazyload');
   });
 };
 

@@ -72,12 +72,7 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
     <link rel="dns-prefetch" href="//www.googletagmanager.com">
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
   <% } %>
-  
-  <!-- 字体预加载：支持霞鹜文楷等自定义字体 -->
-  <% if ((theme.font && theme.font.font_family && theme.font.font_family.includes('LXGW')) || 
-        (theme.custom_css && theme.custom_css.some(css => css.includes('lxgw-wenkai')))) { %>
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/LXGWWenKaiScreen-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <% } %>
+
   
   <!-- 图标库异步预加载 -->
   <% if (theme.iconfont) { %>

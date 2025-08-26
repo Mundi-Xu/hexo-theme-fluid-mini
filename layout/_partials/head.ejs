@@ -60,13 +60,11 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   
   <!-- DNS预解析和预连接优化 -->
   <link rel="dns-prefetch" href="//at.alicdn.com">
-  <link rel="dns-prefetch" href="//cdn.bootcdn.net">
   <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="//raw.githubusercontent.com">
   <link rel="dns-prefetch" href="//busuanzi.ibruce.info">
   
   <link rel="preconnect" href="https://at.alicdn.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
   
@@ -78,7 +76,7 @@ var ogConfig = Object.assign({ image: ogImage && url_for(ogImage) }, theme.open_
   <!-- 字体预加载：支持霞鹜文楷等自定义字体 -->
   <% if ((theme.font && theme.font.font_family && theme.font.font_family.includes('LXGW')) || 
         (theme.custom_css && theme.custom_css.some(css => css.includes('lxgw-wenkai')))) { %>
-    <link rel="preload" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/LXGWWenKaiScreen-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/LXGWWenKaiScreen-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <% } %>
   
   <!-- 图标库异步预加载 -->

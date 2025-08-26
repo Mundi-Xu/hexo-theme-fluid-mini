@@ -231,7 +231,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   # 引入【霞鹜文楷】css
-  - https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css
+  - https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css
 
 # 自定义 <head> 节点中的 HTML 内容
 # Customize <head> HTML content

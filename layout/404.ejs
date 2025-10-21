@@ -12,7 +12,36 @@ page.banner_mask_alpha = theme.page404.banner_mask_alpha
     location.href = "<%- url_for('/') %>";
   }
 
-  <% if (theme.page404.redirect_delay) { %>
+  <% if (theme.page404.redirect_delay && parseInt(theme.page404.redirect_delay) > 0) { %>
     setTimeout(redirect, <%= parseInt(theme.page404.redirect_delay) %>)
   <% } %>
 </script>
+
+<div class="container nopadding-x-md">
+  <div id="board">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-10 m-auto">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="card border-0 bg-transparent shadow-none">
+      <div class="card-body text-center">
+        <div class="card-content">
+          <div class="link-text">
+            <h2 class="font-weight-light mb-5"><%- __('page404.message') %></h2>
+            <div class="link-actions">
+              <a href="<%- url_for('/') %>" class="btn btn-outline-primary btn-block mb-2"><i class="iconfont icon-home-fill"></i> <%- __('page404.return_home') %></a>
+              <a href="javascript:;" class="btn btn-outline-primary btn-block mb-2" data-toggle="modal" data-target="#modalSearch"><i class="iconfont icon-search"></i> <%- __('page404.try_search') %></a>
+              <a href="<%- url_for('archives/') %>" class="btn btn-outline-primary btn-block mb-2"><i class="iconfont icon-archive-fill"></i> <%- __('page404.view_all_posts') %></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
